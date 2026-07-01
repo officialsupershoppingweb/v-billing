@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V billing</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Icons ke liye font link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -21,7 +20,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP WRAPPER (Password sahi hone par dikhega) -->
+    <!-- MAIN APP WRAPPER -->
     <div id="app-wrapper" class="hidden">
         
         <!-- TOP APP BAR -->
@@ -36,71 +35,76 @@
         <!-- 2. MAIN PAGES CONTAINER -->
         <main class="app-content">
             
-            <!-- PAGE 1: HOME (Inventory Views) -->
+            <!-- PAGE 1: HOME -->
             <section id="page-home" class="app-page active-page">
-                <!-- Categories Grid Layout -->
                 <div class="category-grid" id="categories-container">
-                    <!-- Categories (Shirt, Pant, etc.) automatic JavaScript se yahan aayengi -->
+                    <!-- Dynamic Icons ke sath JavaScript se render hoga -->
                 </div>
                 
-                <!-- Dynamic Product View (Category click karne par) -->
                 <div id="product-view" class="hidden">
                     <button class="back-btn" onclick="showCategories()"><i class="fa fa-arrow-left"></i> Back</button>
                     <h3 id="current-category-title">Category Name</h3>
-                    
-                    <!-- Size Filters Layout -->
-                    <div class="size-filter-row" id="size-filters-container">
-                        <!-- Sizes automatic dynamic loading -->
-                    </div>
-                    
-                    <!-- Products Grid -->
-                    <div class="products-list-grid" id="products-list-container">
-                        <!-- Products card photo, price aur qty selector ke sath -->
-                    </div>
+                    <div class="size-filter-row" id="size-filters-container"></div>
+                    <div class="products-list-grid" id="products-list-container"></div>
                 </div>
             </section>
 
-            <!-- PAGE 2: CART (Review Screen) -->
+            <!-- PAGE 2: CART -->
             <section id="page-cart" class="app-page hidden">
                 <h2><i class="fa fa-shopping-cart"></i> Selected Items (Cart)</h2>
-                <div class="cart-items-list" id="cart-items-container">
-                    <!-- Cart items list -->
+                
+                <!-- Extra Item Add Karne Ka Form (Jaise Chocolate) -->
+                <div class="extra-item-box">
+                    <h4>+ Add Custom/Extra Item (e.g. Chocolate)</h4>
+                    <div class="extra-inputs">
+                        <input type="text" id="extra-name" placeholder="Item Name">
+                        <input type="number" id="extra-price" placeholder="Price">
+                        <input type="number" id="extra-qty" placeholder="Qty" value="1">
+                        <button onclick="addCustomItemToCart()">Add</button>
+                    </div>
                 </div>
+
+                <div class="cart-items-list" id="cart-items-container"></div>
                 <div class="cart-summary">
                     <h3>Total Items: <span id="cart-total-qty">0</span></h3>
                     <button class="action-btn-green" onclick="confirmToReceipt()">Confirm to Make Receipt</button>
                 </div>
             </section>
 
-            <!-- PAGE 3: BILLING (Thermal Invoice Layout) -->
+            <!-- PAGE 3: BILLING -->
             <section id="page-billing" class="app-page hidden">
                 <h2><i class="fa fa-file-invoice"></i> Billing & Invoice</h2>
                 
-                <!-- Customer Details Input -->
                 <div class="customer-info-inputs">
                     <input type="text" id="cust-name" placeholder="Customer Name">
                     <input type="tel" id="cust-phone" placeholder="Customer Mobile Number">
                 </div>
 
-                <!-- Printable Invoice Preview -->
-                <div class="invoice-preview-box" id="invoice-print-area">
-                    <!-- Yeh layout exact v_billing_thermal_receipt_sample.pdf jaisa white banega -->
+                <!-- Mode of Payment Switcher on Screen -->
+                <div class="payment-mode-selector">
+                    <label><strong>Mode of Payment: </strong></label>
+                    <input type="radio" id="pay-cash" name="bill-payment-mode" value="Cash" checked onchange="updateInvoicePreview()">
+                    <label for="pay-cash">Cash Payment</label>
+                    <input type="radio" id="pay-online" name="bill-payment-mode" value="Online" onchange="updateInvoicePreview()">
+                    <label for="pay-online">Online Payment</label>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Printable Invoice Preview -->
+                <div class="invoice-preview-box" id="invoice-print-area"></div>
+
                 <div class="billing-actions">
                     <button class="btn-edit" onclick="enableInvoiceEdit()"><i class="fa fa-edit"></i> Edit Bill</button>
+                    <button class="btn-cancel" onclick="cancelCurrentBill()"><i class="fa fa-trash"></i> Cancel Bill</button>
                     <button class="btn-print" onclick="printThermalBill()"><i class="fa fa-print"></i> Print Bill</button>
                     <button class="btn-whatsapp" onclick="shareOnWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Share WhatsApp</button>
                 </div>
             </section>
 
-            <!-- PAGE 4: ADD ITEM (Stock Entry) -->
+            <!-- PAGE 4: ADD ITEM -->
             <section id="page-add-item" class="app-page hidden">
                 <h2><i class="fa fa-plus-circle"></i> Add New Stock</h2>
                 <div class="form-container">
                     <input type="text" id="stock-title" placeholder="Product Title (e.g. RPS Shirt)">
-                    
                     <select id="stock-category">
                         <option value="Shirt">Shirt</option>
                         <option value="Pant">Pant</option>
@@ -117,10 +121,9 @@
                         <option value="Belt">Belt</option>
                         <option value="Bag">Bag</option>
                     </select>
-
                     <input type="text" id="stock-size" placeholder="Size (e.g. 20, 22, W28)">
                     <input type="number" id="stock-price" placeholder="Price (₹)">
-                    <input type="number" id="stock-qty" placeholder="Stock Quantity (Pieces)">
+                    <input type="number" id="stock-qty" placeholder="Stock Quantity (Pieces)"></input>
                     <textarea id="stock-desc" placeholder="Product Description (Optional)"></textarea>
                     
                     <label class="file-upload-label">
@@ -128,17 +131,22 @@
                         <input type="file" id="stock-image" accept="image/*" onchange="previewImage(event)">
                     </label>
                     <div id="image-preview-container"></div>
-
                     <button class="btn-submit" onclick="saveNewStock()">Save Product to Inventory</button>
                 </div>
             </section>
 
-            <!-- PAGE 5: HISTORY (6-Month Sales Record) -->
+            <!-- PAGE 5: HISTORY -->
             <section id="page-history" class="app-page hidden">
-                <h2><i class="fa fa-history"></i> Sales History (6 Months)</h2>
-                <div class="history-filters">
-                    <p>Records automatically clear after 6 months.</p>
+                <h2><i class="fa fa-history"></i> Sales History</h2>
+                
+                <!-- Smart Date Filter System -->
+                <div class="history-filters-box">
+                    <button onclick="filterHistoryByDay('today')">Today</button>
+                    <button onclick="filterHistoryByDay('yesterday')">Yesterday</button>
+                    <input type="date" id="history-custom-date" onchange="filterHistoryByCustomDate()">
+                    <button onclick="resetHistoryFilter()">Show All</button>
                 </div>
+
                 <div class="table-responsive">
                     <table class="history-table">
                         <thead>
@@ -149,80 +157,53 @@
                                 <th>Date/Time</th>
                             </tr>
                         </thead>
-                        <tbody id="history-table-body">
-                            <!-- History logs -->
-                        </tbody>
+                        <tbody id="history-table-body"></tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- PAGE 6: SMART CALCULATOR (Quick Bill Ledger) -->
+            <!-- PAGE 6: SMART CALCULATOR -->
             <section id="page-calculator" class="app-page hidden">
                 <h2><i class="fa fa-calculator"></i> Digital Ledger Calculator</h2>
+                
+                <div class="payment-mode-selector">
+                    <label><strong>Mode of Payment: </strong></label>
+                    <input type="radio" id="calc-cash" name="calc-payment-mode" value="Cash" checked onchange="renderLedgerTable()">
+                    <label for="calc-cash">Cash Payment</label>
+                    <input type="radio" id="calc-online" name="calc-payment-mode" value="Online" onchange="renderLedgerTable()">
+                    <label for="calc-online">Online Payment</label>
+                </div>
+
                 <div class="ledger-container">
                     <div class="ledger-inputs">
-                        <input type="text" id="calc-item-name" placeholder="Type Item Name (e.g. Tie)">
+                        <input type="text" id="calc-item-name" placeholder="Type Item Name">
                         <input type="number" id="calc-item-price" placeholder="Price">
                         <input type="number" id="calc-item-qty" placeholder="Qty" value="1">
                         <button onclick="addLedgerRow()"><i class="fa fa-plus"></i></button>
                     </div>
                     
-                    <!-- Ledger Sequence List -->
-                    <div class="ledger-sheet">
-                        <table id="ledger-table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Total</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ledger-rows">
-                                <!-- Sequence lists row wise -->
-                            </tbody>
-                        </table>
-                        <div class="ledger-total">
-                            <h3>Grand Total: ₹<span id="ledger-grand-total">0</span></h3>
-                        </div>
+                    <div class="ledger-sheet" id="calculator-bill-area">
+                        <!-- Dynamic Ledger View with Goods Sold message -->
                     </div>
                     
-                    <button class="btn-print" onclick="printCalculatorBill()"><i class="fa fa-print"></i> Print Quick Bill</button>
+                    <button class="btn-calc-print" onclick="printCalculatorBill()"><i class="fa fa-print"></i> Print Quick Bill</button>
                 </div>
             </section>
 
         </main>
 
-        <!-- 3. BOTTOM NAVIGATION BAR (6 Navigation Buttons) -->
+        <!-- BOTTOM NAVIGATION BAR -->
         <nav class="bottom-nav">
-            <button class="nav-item active-nav" onclick="switchPage('home')">
-                <i class="fa fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('cart')">
-                <i class="fa fa-shopping-cart"></i>
-                <span>Cart</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('billing')">
-                <i class="fa fa-file-invoice"></i>
-                <span>Billing</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('add-item')">
-                <i class="fa fa-plus-circle"></i>
-                <span>Add Item</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('history')">
-                <i class="fa fa-history"></i>
-                <span>History</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('calculator')">
-                <i class="fa fa-calculator"></i>
-                <span>Calculator</span>
-            </button>
+            <button class="nav-item active-nav" onclick="switchPage('home')"><i class="fa fa-home"></i><span>Home</span></button>
+            <button class="nav-item" onclick="switchPage('cart')"><i class="fa fa-shopping-cart"></i><span>Cart</span></button>
+            <button class="nav-item" onclick="switchPage('billing')"><i class="fa fa-file-invoice"></i><span>Billing</span></button>
+            <button class="nav-item" onclick="switchPage('add-item')"><i class="fa fa-plus-circle"></i><span>Add Item</span></button>
+            <button class="nav-item" onclick="switchPage('history')"><i class="fa fa-history"></i><span>History</span></button>
+            <button class="nav-item" onclick="switchPage('calculator')"><i class="fa fa-calculator"></i><span>Calculator</span></button>
         </nav>
 
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
