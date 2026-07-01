@@ -18,6 +18,8 @@
     --text-gray: #666666;
     --success-green: #2e7d32;
     --danger-red: #c62828;
+    --purple-online: #673ab7;
+    --yellow-calc: #ffeb3b;
     --border-color: #dddddd;
 }
 
@@ -29,436 +31,116 @@ body {
     justify-content: center;
 }
 
-/* --- UTILITIES --- */
 .hidden { display: none !important; }
 
-/* --- 1. LOGIN SCREEN --- */
+/* --- LOGIN SCREEN --- */
 #login-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-color: var(--primary-blue);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+    display: flex; justify-content: center; align-items: center; z-index: 9999;
 }
-
 .login-box {
-    background: var(--pure-white);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    width: 90%;
-    max-width: 360px;
-    text-align: center;
+    background: var(--pure-white); padding: 30px; border-radius: 12px;
+    width: 90%; max-width: 360px; text-align: center;
 }
-
-.login-box h2 {
-    color: var(--primary-blue);
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-
-.login-box p {
-    color: var(--text-gray);
-    font-size: 13px;
-    margin-bottom: 20px;
-}
-
-.login-box input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 15px;
-    text-align: center;
-}
-
-.login-box button {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary-blue);
-    color: var(--pure-white);
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.error-msg {
-    color: var(--danger-red);
-    font-size: 12px;
-    margin-top: 10px;
-}
+.login-box h2 { color: var(--primary-blue); margin-bottom: 10px; }
+.login-box input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; text-align: center; }
+.login-box button { width: 100%; padding: 12px; background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
 /* --- APP WRAPPER & HEADER --- */
 #app-wrapper {
-    width: 100%;
-    max-width: 500px; /* Mobile responsive width */
-    background: var(--pure-white);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    padding-bottom: 75px; /* Space for bottom navigation */
+    width: 100%; max-width: 500px; background: var(--pure-white); min-height: 100vh;
+    display: flex; flex-direction: column; position: relative; padding-bottom: 75px;
 }
+.app-header { background-color: var(--primary-blue); color: white; padding: 15px; position: sticky; top: 0; z-index: 100; }
+.app-header h1 { font-size: 20px; margin-bottom: 10px; }
+.search-container { position: relative; width: 100%; }
+.search-container input { width: 100%; padding: 10px 40px 10px 15px; border: none; border-radius: 8px; background-color: rgba(255, 255, 255, 0.15); color: white; }
+.search-container i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.7); }
+.app-content { padding: 15px; flex: 1; }
+.app-page h2 { font-size: 18px; color: var(--primary-blue); margin-bottom: 15px; border-bottom: 2px solid var(--bg-light); padding-bottom: 5px; }
 
-.app-header {
-    background-color: var(--primary-blue);
-    color: var(--pure-white);
-    padding: 15px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.app-header h1 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.search-container {
-    position: relative;
-    width: 100%;
-}
-
-.search-container input {
-    width: 100%;
-    padding: 10px 40px 10px 15px;
-    border: none;
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.15);
-    color: var(--pure-white);
-    font-size: 14px;
-}
-
-.search-container input::placeholder {
-    color: rgba(255,255,255,0.7);
-}
-
-.search-container i {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(255,255,255,0.7);
-}
-
-.app-content {
-    padding: 15px;
-    flex: 1;
-}
-
-.app-page h2 {
-    font-size: 18px;
-    color: var(--primary-blue);
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--bg-light);
-    padding-bottom: 5px;
-}
-
-/* --- PAGE 1: CATEGORIES GRID --- */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
+/* --- CATEGORIES GRID --- */
+.category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .category-card {
-    background: var(--bg-light);
-    border: 1px solid var(--border-color);
-    padding: 15px 10px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--dark-blue);
-    transition: transform 0.2s;
+    background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px 10px;
+    border-radius: 10px; text-align: center; cursor: pointer; font-weight: 500; color: var(--dark-blue);
 }
-
-.category-card:active {
-    transform: scale(0.95);
-    background-color: #e2e8f0;
-}
-
-.category-card.add-btn {
-    background: #edf2f7;
-    border: 1px dashed var(--primary-blue);
-    color: var(--primary-blue);
-}
+.category-card i { display: block; margin-bottom: 6px; font-size: 20px; color: var(--primary-blue); }
 
 /* PRODUCTS VIEW & SIZES */
-.back-btn {
-    background: none;
-    border: none;
-    color: var(--primary-blue);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
+.back-btn { background: none; border: none; color: var(--primary-blue); font-weight: 500; cursor: pointer; margin-bottom: 10px; }
+.size-filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; }
+.size-chip { padding: 6px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; font-size: 12px; cursor: pointer; }
+.size-chip.active-size { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+.products-list-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.product-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; background: white; }
+.product-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
+.qty-control { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.qty-control button { width: 28px; height: 28px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-.size-filter-row {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding: 5px 0 12px 0;
-    margin-bottom: 10px;
-}
+/* --- CART EXTRA ITEM BOX --- */
+.extra-item-box { background: #f0f4f8; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cbd5e1; }
+.extra-item-box h4 { font-size: 12px; margin-bottom: 5px; color: var(--primary-blue); }
+.extra-inputs { display: flex; gap: 5px; }
+.extra-inputs input { padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; }
+#extra-name { flex: 2; } #extra-price, #extra-qty { flex: 1; }
+.extra-inputs button { background: var(--primary-blue); color: white; border: none; padding: 0 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
 
-.size-chip {
-    padding: 6px 14px;
-    background: var(--bg-light);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.size-chip.active-size {
-    background: var(--primary-blue);
-    color: var(--pure-white);
-    border-color: var(--primary-blue);
-}
-
-.products-list-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.product-card {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    background: var(--pure-white);
-}
-
-.product-card img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 8px;
-}
-
-.product-card h4 { font-size: 13px; margin-bottom: 4px; }
-.product-card .price { color: var(--primary-blue); font-weight: 600; margin-bottom: 6px; }
-.product-card .stock { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
-
-.qty-control {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.qty-control button {
-    width: 28px;
-    height: 28px;
-    background: var(--bg-light);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.qty-control span { font-weight: 600; min-width: 15px; }
-
-/* --- PAGE 2 & 3: CART & BILLING --- */
 .cart-items-list { margin-bottom: 15px; }
-.action-btn-green {
-    width: 100%;
-    padding: 12px;
-    background: var(--success-green);
-    color: var(--pure-white);
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-}
+.action-btn-green { width: 100%; padding: 12px; background: var(--success-green); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-.customer-info-inputs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
+/* --- BILLING PAYMENT SELECTOR --- */
+.customer-info-inputs { display: flex; gap: 10px; margin-bottom: 12px; }
+.customer-info-inputs input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
+.payment-mode-selector { background: var(--bg-light); padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; }
+.payment-mode-selector input { margin-left: 10px; margin-right: 3px; cursor: pointer; }
 
-.customer-info-inputs input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-}
-
-/* --- THERMAL INVOICE LAYOUT (v_billing_thermal_receipt_sample.pdf Code) --- */
-.invoice-preview-box {
-    background: #ffffff;
-    border: 1px solid #1a365d;
-    padding: 15px;
-    color: #111111;
-    font-size: 12px;
-    max-width: 100%;
-    margin-bottom: 15px;
-}
-
-.billing-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.billing-actions button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
+/* --- THERMAL INVOICE LAYOUT --- */
+.invoice-preview-box { background: white; border: 1px solid #1a365d; padding: 12px; color: #111111; font-size: 12px; margin-bottom: 15px; }
+.billing-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.billing-actions button { padding: 10px; border: none; border-radius: 6px; color: white; font-size: 12px; font-weight: bold; cursor: pointer; }
 .btn-edit { background: var(--text-gray); }
-.btn-print { background: var(--primary-blue); }
-.btn-whatsapp { background: #25d366; }
+.btn-cancel { background: var(--danger-red); }
+.btn-print { background: var(--primary-blue); grid-column: span 2; padding: 12px !important; font-size: 14px !important; }
+.btn-whatsapp { background: #25d366; grid-column: span 2; padding: 12px !important; font-size: 14px !important; }
 
-/* --- PAGE 4: FORMS --- */
-.form-container input, .form-container select, .form-container textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.file-upload-label {
-    display: block;
-    padding: 12px;
-    background: var(--bg-light);
-    border: 1px dashed var(--primary-blue);
-    border-radius: 6px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--primary-blue);
-    font-weight: 500;
-    margin-bottom: 15px;
-}
-
+/* --- ADD ITEM FORM --- */
+.form-container input, .form-container select, .form-container textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+.file-upload-label { display: block; padding: 12px; background: var(--bg-light); border: 1px dashed var(--primary-blue); border-radius: 6px; text-align: center; cursor: pointer; color: var(--primary-blue); font-weight: bold; margin-bottom: 15px; }
 .file-upload-label input { display: none; }
 #image-preview-container img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
+.btn-submit { width: 100%; padding: 12px; background: var(--primary-blue); color: white; border: none; border-radius: 6px; font-weight: bold; }
 
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    background: var(--primary-blue);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 15px;
-}
-
-/* --- PAGE 5: HISTORY TABLE --- */
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-.history-table th, .history-table td {
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--border-color);
-    text-align: left;
-}
-
+/* --- HISTORY FILTER BOX --- */
+.history-filters-box { display: flex; gap: 5px; margin-bottom: 15px; align-items: center; }
+.history-filters-box button { padding: 6px 12px; background: #e2e8f0; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; cursor: pointer; }
+.history-filters-box input { padding: 5px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; }
+.history-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.history-table th, .history-table td { padding: 10px 6px; border-bottom: 1px solid var(--border-color); text-align: left; }
 .history-table th { background: var(--bg-light); color: var(--primary-blue); }
 
-/* --- PAGE 6: LEDGER CALCULATOR --- */
-.ledger-inputs {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 12px;
-}
-
-.ledger-inputs input {
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-}
-
-#calc-item-name { flex: 2; }
-#calc-item-price, #calc-item-qty { flex: 1; }
-
-.ledger-inputs button {
-    background: var(--primary-blue);
-    color: white;
-    border: none;
-    padding: 0 12px;
-    border-radius: 4px;
-}
-
-.ledger-sheet {
-    border: 1px solid var(--border-color);
-    padding: 10px;
-    margin-bottom: 15px;
-}
-
+/* --- LEDGER CALCULATOR --- */
+.ledger-inputs { display: flex; gap: 5px; margin-bottom: 12px; }
+.ledger-inputs input { padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; }
+#calc-item-name { flex: 2; } #calc-item-price, #calc-item-qty { flex: 1; }
+.ledger-inputs button { background: var(--primary-blue); color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; }
+.ledger-sheet { background: white; border: 1px solid var(--border-color); padding: 10px; margin-bottom: 15px; }
 #ledger-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-#ledger-table th { text-align: left; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+#ledger-table th { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-align: left; }
 #ledger-table td { padding: 6px 0; }
 .ledger-total { text-align: right; margin-top: 10px; padding-top: 5px; border-top: 1px dashed var(--border-color); }
+.btn-calc-print { width: 100%; padding: 12px; background-color: var(--yellow-calc); color: #333; border: 1px solid #ccc; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
 
-/* --- BOTTOM NAVIGATION BAR --- */
-.bottom-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 65px;
-    background-color: var(--pure-white);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 200;
-}
-
-.nav-item {
-    background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--text-gray);
-    cursor: pointer;
-    font-size: 11px;
-    width: 16%;
-}
-
+/* --- BOTTOM NAV --- */
+.bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 65px; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
+.nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; color: var(--text-gray); cursor: pointer; font-size: 11px; width: 16%; }
 .nav-item i { font-size: 18px; margin-bottom: 3px; }
-.nav-item.active-nav { color: var(--primary-blue); font-weight: 600; }
+.nav-item.active-nav { color: var(--primary-blue); font-weight: bold; }
 
-/* --- PRINTER MEDIA QUERY (Sirf Bill Area Print Karne Ke Liye) --- */
+/* --- PRINT MEDIA QUERY --- */
 @media print {
     body * { visibility: hidden; }
-    #invoice-print-area, #invoice-print-area * { visibility: visible; }
-    #invoice-print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        border: none !important;
-    }
+    #invoice-print-area, #invoice-print-area *, #calculator-bill-area, #calculator-bill-area * { visibility: visible; }
+    #invoice-print-area, #calculator-bill-area { position: absolute; left: 0; top: 0; width: 100%; border: none !important; }
 }
