@@ -49,7 +49,7 @@ body {
 
 /* --- APP WRAPPER & HEADER --- */
 #app-wrapper {
-    width: 100%; max-width: 600px; background: var(--pure-white); min-height: 100vh;
+    width: 100%; max-width: 650px; background: var(--pure-white); min-height: 100vh;
     display: flex; flex-direction: column; position: relative; padding-bottom: 75px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
@@ -61,15 +61,14 @@ body {
 .app-content { padding: 15px; flex: 1; }
 .app-page h2 { font-size: 18px; color: var(--primary-blue); margin-bottom: 15px; border-bottom: 2px solid var(--bg-light); padding-bottom: 5px; }
 
-/* --- CATEGORIES GRID --- */
+/* --- CATEGORIES GRID (SOLID UNIFORM ICONS STYLE) --- */
 .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .category-card {
-    background: var(--pure-white); border: 1px solid var(--border-color); padding: 12px 8px;
+    background: var(--pure-white); border: 1px solid var(--border-color); padding: 15px 8px;
     border-radius: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--dark-blue);
     box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-.category-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 8px; }
-.category-card i { display: block; margin-bottom: 8px; font-size: 24px; color: var(--primary-blue); }
+.category-card svg, .category-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 8px; }
 .category-card.add-btn { background: #edf2f7; border: 1px dashed var(--primary-blue); color: var(--primary-blue); font-weight: bold; }
 
 /* --- PRODUCTS VIEW & MODALS --- */
@@ -82,19 +81,19 @@ body {
 .product-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; background: white; position: relative; }
 .product-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
 
-/* 3-Dots Menu Styling */
+/* 3-Dots Dropdown Setup */
 .three-dots-menu { position: absolute; top: 8px; right: 8px; cursor: pointer; font-size: 16px; color: var(--text-gray); padding: 4px; z-index: 5; }
 .three-dots-dropdown { position: absolute; top: 30px; right: 8px; background: white; border: 1px solid var(--border-color); border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: left; z-index: 10; width: 110px; }
 .three-dots-dropdown button { width: 100%; padding: 8px 12px; background: none; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-dark); }
 .three-dots-dropdown button:hover { background: var(--bg-light); }
 
 /* Stock alerts */
-.stock-badge { font-size: 11px; font-weight: bold; margin-bottom: 8px; }
+.stock-badge { font-size: 11px; font-weight: bold; margin-bottom: 8px; display: inline-block; }
 .stock-warning { color: var(--danger-red); animation: blinker 1.5s linear infinite; }
 @keyframes blinker { 50% { opacity: 0.3; } }
 .btn-update-stock-inline { background: var(--primary-blue); color: white; border: none; padding: 4px 8px; font-size: 11px; border-radius: 4px; margin-top: 4px; cursor: pointer; }
 
-/* Modal Styles */
+/* Modal architecture */
 .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; }
 .modal-content { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; }
 .modal-content h3 { margin-bottom: 12px; color: var(--primary-blue); }
@@ -113,13 +112,25 @@ body {
 .qty-control button { width: 28px; height: 28px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 4px; font-weight: bold; cursor: pointer; }
 .action-btn-green { width: 100%; padding: 12px; background: var(--success-green); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-/* --- BILLING PAGE & WIDTH ADJUSTMENTS --- */
-.customer-info-inputs { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.customer-info-inputs input { flex: 1; min-width: 150px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
-.payment-mode-selector { background: var(--bg-light); padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; }
+/* --- GOOGLE STYLE LAPTOP AUTOCOMPLETE DROP-DOWN --- */
+.autocomplete-wrapper { width: 100%; position: relative; }
+.suggestion-popup {
+    position: absolute; top: 42px; left: 0; width: 100%; background: white;
+    border: 1px solid var(--border-color); border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 200px; overflow-y: auto;
+}
+.suggestion-item { padding: 10px 12px; cursor: pointer; font-size: 13px; color: var(--text-dark); text-align: left; border-bottom: 1px solid #f1f5f9; }
+.suggestion-item:hover { background: var(--bg-light); color: var(--primary-blue); font-weight: 500; }
+
+.customer-info-inputs { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: flex-start; }
+.customer-info-inputs input { flex: 1; min-width: 150px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; height: 40px; }
+.payment-mode-selector { background: var(--bg-light); padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; width: 100%; }
 .payment-mode-selector input { margin-left: 10px; margin-right: 3px; cursor: pointer; }
 
-.invoice-preview-box { background: white; border: 1px solid #1a365d; padding: 12px; color: #111111; font-size: 12px; margin-bottom: 15px; overflow-x: auto; }
+/* White box layout logic for rendering dynamic captures cleanly */
+.invoice-container-white { width: 100%; background: #ffffff !important; border: 1px solid #ddd; border-radius: 6px; padding: 10px; margin-bottom: 15px; }
+.invoice-preview-box { background: white !important; color: #111111; font-size: 12px; overflow-x: auto; width: 100%; }
+
 .billing-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .billing-actions button { padding: 10px; border: none; border-radius: 6px; color: white; font-size: 12px; font-weight: bold; cursor: pointer; }
 .btn-edit { background: var(--text-gray); }
@@ -127,8 +138,20 @@ body {
 .btn-print { background: var(--primary-blue); grid-column: span 2; padding: 12px !important; font-size: 14px !important; }
 .btn-whatsapp { background: #25d366; grid-column: span 2; padding: 12px !important; font-size: 14px !important; }
 
-/* --- STOCK PANEL 3 BLOCKS --- */
-.stock-block-box { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+/* --- STOCK DASHBOARD 3 BUTTON PANELS (PHOTO 6 LAYOUT) --- */
+.stock-dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+.stock-dash-card {
+    border-radius: 8px; padding: 20px 10px; text-align: center; color: white; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    font-weight: bold; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s;
+}
+.stock-dash-card:active { transform: scale(0.96); }
+.stock-dash-card i { font-size: 20px; }
+.btn-available-stock { background-color: #4b6cb7; }
+.btn-unavailable-stock { background-color: #cb2d3e; }
+.btn-add-stock { background-color: #2b5876; }
+
+.stock-block-box { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
 .stock-block-box h3 { font-size: 14px; margin-bottom: 10px; color: var(--primary-blue); border-bottom: 1px solid var(--bg-light); padding-bottom: 4px; }
 .form-container input, .form-container select, .form-container textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
 .file-upload-label { display: block; padding: 10px; background: var(--bg-light); border: 1px dashed var(--primary-blue); border-radius: 6px; text-align: center; cursor: pointer; color: var(--primary-blue); font-weight: bold; font-size: 12px; }
@@ -154,11 +177,11 @@ body {
 .ledger-inputs input { padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; flex: 1; min-width: 60px; }
 #calc-item-name { flex: 2; min-width: 110px; }
 .ledger-inputs button { background: var(--primary-blue); color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; }
-.ledger-sheet { background: white; border: 1px solid var(--border-color); padding: 10px; margin-bottom: 15px; overflow-x: auto; }
+.ledger-sheet { background: white !important; color: #111111; padding: 10px; width: 100%; overflow-x: auto; }
 #ledger-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 280px; }
-#ledger-table th { border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-align: left; }
+#ledger-table th { border-bottom: 1px solid #333; padding-bottom: 5px; text-align: left; }
 #ledger-table td { padding: 6px 0; }
-.btn-calc-print { width: 100%; padding: 12px; background-color: var(--yellow-calc); color: #222; border: 1px solid #d4c522; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
+.btn-calc-print { flex: 1; padding: 12px; background-color: var(--yellow-calc); color: #222; border: 1px solid #d4c522; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
 
 /* --- BOTTOM NAV --- */
 .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; height: 65px; background: white; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
@@ -166,7 +189,7 @@ body {
 .nav-item i { font-size: 18px; margin-bottom: 3px; }
 .nav-item.active-nav { color: var(--primary-blue); font-weight: bold; }
 
-/* --- PRINT QUERY --- */
+/* --- MEDIA QUERY PRINT --- */
 @media print {
     body * { visibility: hidden; }
     .no-print { display: none !important; }
