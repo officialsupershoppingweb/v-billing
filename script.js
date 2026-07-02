@@ -1,23 +1,23 @@
-// --- V BILLING CORE ENGINE v2.0 ---
+// --- V BILLING CORE ENGINE v2.1 ---
 
-let MASTER_PASSWORD = "1234"; // AAP bante time yahan apna password change kar lena
+let MASTER_PASSWORD = "1234"; // Aapka password sequence
 
-// Categories base datastore including SVG dynamic vector icons mapping based on uniform visual photos
+// Icons ko bina file jhanjhat ke solid FontAwesome tags par map kar diya hai takki dabba na dikhe
 let categoriesData = JSON.parse(localStorage.getItem('vb_categories')) || [
-    { name: "Shirt", icon: `category_svg/shirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "Pant", icon: `category_svg/pant.svg`, sizes: ["22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "W28", "W30", "W32", "W34"] },
-    { name: "Tunic", icon: `category_svg/tunic.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "44"] },
-    { name: "Ricon Shirt", icon: `category_svg/shirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "Tousure Pant", icon: `category_svg/pant.svg`, sizes: ["32", "34", "36", "38", "40", "42", "W28", "W30", "W32", "W34"] },
-    { name: "Skirt", icon: `category_svg/skirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36"] },
-    { name: "RPS Shirt", icon: `category_svg/shirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "RPS Pant", icon: `category_svg/pant.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "RPS Skirt", icon: `category_svg/skirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "RPS Lower", icon: `category_svg/lower.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "RPS T-shirt", icon: `category_svg/tshirt.svg`, sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
-    { name: "Tie", icon: `category_svg/tie.svg`, sizes: ["Normal", "RPS School", "Other"] },
-    { name: "Belt", icon: `category_svg/belt.svg`, sizes: ["Normal", "RPS School", "Other"] },
-    { name: "Bag", icon: `category_svg/bag.svg`, sizes: ["200-250", "250-300", "300-350", "350-400", "400-500", "500-550", "550-600"] }
+    { name: "Shirt", icon: "fa-shirt", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "Pant", icon: "fa-user-ninja", sizes: ["22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "W28", "W30", "W32", "W34"] },
+    { name: "Tunic", icon: "fa-person-dress", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "42", "44"] },
+    { name: "Ricon Shirt", icon: "fa-shirt", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "Tousure Pant", icon: "fa-user-ninja", sizes: ["32", "34", "36", "38", "40", "42", "W28", "W30", "W32", "W34"] },
+    { name: "Skirt", icon: "fa-person-dress", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36"] },
+    { name: "RPS Shirt", icon: "fa-shirt", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "RPS Pant", icon: "fa-user-ninja", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "RPS Skirt", icon: "fa-person-dress", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "RPS Lower", icon: "fa-socks", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "RPS T-shirt", icon: "fa-tshirt", sizes: ["20", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40"] },
+    { name: "Tie", icon: "fa-black-tie", sizes: ["Normal", "RPS School", "Other"] },
+    { name: "Belt", icon: "fa-hard-drive", sizes: ["Normal", "RPS School", "Other"] },
+    { name: "Bag", icon: "fa-bag-shopping", sizes: ["200-250", "250-300", "300-350", "350-400", "400-500", "500-550", "550-600"] }
 ];
 
 let inventory = JSON.parse(localStorage.getItem('vb_inventory')) || [];
@@ -27,7 +27,6 @@ let tempCatIconBase64 = "";
 let tempEditProdBase64 = "";
 let uploadedImageBase64 = "";
 
-// Smart Laptop Autocomplete Suggestion Core Base (common names database)
 let basicNamesList = ["Nitish Kumar", "Amit Singh", "Rajesh Maurya", "Raju Jaiswal", "Vijay Yadav", "Vikram Verma", "Suresh Maurya", "Sunil Maurya", "Anil Kumar", "Sanjay Singh"];
 
 window.onload = function() {
@@ -36,7 +35,7 @@ window.onload = function() {
     cleanOldHistory();
     resetHistoryFilter();
     populateStockPanelDetails();
-    populateStockSizeSelector(); // Add stock logic side
+    populateStockSizeSelector();
 };
 
 // --- SECURITY PROTOCOL ---
@@ -54,7 +53,6 @@ function checkPassword() {
 function switchPage(pageId) {
     document.querySelectorAll('.app-page').forEach(page => page.classList.add('hidden'));
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active-nav'));
-    
     document.getElementById(`page-${pageId}`).classList.remove('hidden');
     event.currentTarget.classList.add('active-nav');
     
@@ -69,15 +67,15 @@ function switchPage(pageId) {
     if(pageId === 'calculator') { renderLedgerTable(); }
 }
 
-// --- PAGE 1: CATEGORIES LOADER & RENDER WITH SVG SUPPORT ---
+// --- PAGE 1: CATEGORIES LOADER ---
 function renderCategories() {
     let container = document.getElementById('categories-container');
     if(!container) return; container.innerHTML = "";
     
     categoriesData.forEach(cat => {
         let iconHtml = cat.icon.startsWith("data:image") 
-            ? `<img src="${cat.icon}">` 
-            : `<img src="${cat.icon}">`; // Assuming local SVGs
+            ? `<img src="${cat.icon}" style="width:40px; height:40px; object-fit:contain; margin-bottom:8px;">` 
+            : `<i class="fa ${cat.icon}" style="font-size:26px; display:block; margin-bottom:8px; color:var(--primary-blue);"></i>`;
             
         container.innerHTML += `
             <div class="category-card" onclick="openCategory('${cat.name}')">
@@ -86,16 +84,14 @@ function renderCategories() {
             </div>
         `;
     });
-    // Add master category option block
     container.innerHTML += `
         <div class="category-card add-btn" onclick="openCategoryModal()">
-            <i class="fa fa-plus-circle" style="font-size:20px; display:block; margin-bottom:5px;"></i>
+            <i class="fa fa-plus-circle" style="font-size:24px; display:block; margin-bottom:8px; color:var(--primary-blue);"></i>
             <strong>Add Layout</strong>
         </div>
     `;
 }
 
-// Category modal logic side
 function openCategoryModal() { document.getElementById('category-modal').classList.remove('hidden'); }
 function closeCategoryModal() { document.getElementById('category-modal').classList.add('hidden'); }
 
@@ -113,7 +109,7 @@ function saveNewCategory() {
     let sizesRaw = document.getElementById('new-cat-sizes').value.trim();
     if(!name) { alert("Enter category title!"); return; }
     let sizeArr = sizesRaw ? sizesRaw.split(',').map(s => s.trim()) : ["Standard"];
-    let finalIcon = tempCatIconBase64 || "category_svg/bag.svg"; 
+    let finalIcon = tempCatIconBase64 || "fa-box"; 
     
     categoriesData.push({ name, icon: finalIcon, sizes: sizeArr });
     localStorage.setItem('vb_categories', JSON.stringify(categoriesData));
@@ -143,7 +139,6 @@ function filterSize(category, size, btnElement) {
     renderProducts(category, size);
 }
 
-// --- PRODUCT GRID WITH RED ALERTS, MODAL TRIGGER, INSTANT COUNTER FIX ---
 function renderProducts(category, size) {
     let container = document.getElementById('products-list-container');
     container.innerHTML = "";
@@ -155,7 +150,6 @@ function renderProducts(category, size) {
         let currentQty = cartItem ? cartItem.qty : 0;
         let stockStatusHtml = "";
         
-        // Low stock warning logic side (3 pcs bracket fix)
         if(item.stock <= 0) {
             stockStatusHtml = `<span class="stock-badge stock-warning">Out Of Stock</span><br>
                                <button class="btn-update-stock-inline" onclick="promptRefillStock('${item.id}')">RefillPieces</button>`;
@@ -189,7 +183,7 @@ function renderProducts(category, size) {
 }
 
 function promptRefillStock(id) {
-    let pieces = prompt("Naya maal shop par aa gaya? Enter pieces added:");
+    let pieces = prompt("Enter pieces count to add:");
     if(!pieces || pieces.trim() == "" || isNaN(pieces)) return;
     let item = inventory.find(i => i.id === id);
     if(item) {
@@ -202,7 +196,6 @@ function promptRefillStock(id) {
     }
 }
 
-// Dropdown management side logic
 function toggleDropdown(id) {
     let drop = document.getElementById(`dropdown-${id}`);
     let state = drop.classList.contains('hidden');
@@ -212,16 +205,15 @@ function toggleDropdown(id) {
 }
 document.addEventListener('click', () => document.querySelectorAll('.three-dots-dropdown').forEach(d => d.classList.add('hidden')));
 
-// --- 3-DOTS BUTTON FUNCTIONALITY SIDE ---
 function removeProductPhoto(id) {
-    if(confirm("Are you sure you want to delete only this item photo? Box/Details will remain.")) {
+    if(confirm("Delete only this item photo?")) {
         let item = inventory.find(i => i.id === id);
         if(item) { item.image = ""; localStorage.setItem('vb_inventory', JSON.stringify(inventory)); }
         closeAllAfterAction();
     }
 }
 function deleteProductComplete(id) {
-    if(confirm("DELETE COMPLETE product box? This action is not reversible.")) {
+    if(confirm("DELETE COMPLETE product container?")) {
         inventory = inventory.filter(i => i.id !== id);
         localStorage.setItem('vb_inventory', JSON.stringify(inventory));
         populateStockPanelDetails();
@@ -292,17 +284,14 @@ function searchProducts() {
     });
 }
 
-// --- CART PAGE & INSTANT UPDATER Fixing (0 to 1) ---
 function instantUpdateQty(id, change) {
     let item = inventory.find(i => i.id === id); if(!item) return;
     let cartItem = cart.find(c => c.id === id);
     let curQty = cartItem ? cartItem.qty : 0;
     
-    // Check stock before adding
     if(change > 0 && curQty >= item.stock) { alert("Maximum Available Stock Reached!"); return; }
     updateCartQty(id, change);
     
-    // Re-check qty side
     let updatedCartItem = cart.find(c => c.id === id);
     let newQtyDisplay = updatedCartItem ? updatedCartItem.qty : 0;
     
@@ -322,7 +311,6 @@ function updateCartQty(id, change) {
     document.getElementById('cart-total-qty').innerText = cart.reduce((a, c) => a + c.qty, 0);
 }
 
-// Custom Extra Item (Photo  chocolate item logic)
 function addCustomItemToCart() {
     let name = document.getElementById('extra-name').value.trim();
     let price = Number(document.getElementById('extra-price').value);
@@ -360,7 +348,7 @@ function increaseCartItem(id) { let cartItem = cart.find(c => c.id === id); if(c
 function removeOrDecreaseCartItem(id) { let cartItem = cart.find(c => c.id === id); if(cartItem?.isCustom) { cartItem.qty--; if(cartItem.qty <= 0) cart = cart.filter(c => c.id !== id); } else { instantUpdateQty(id, -1); } renderCart(); }
 function confirmToReceipt() { if(cart.length === 0) { alert("Card is empty!"); return; } switchPage('billing'); }
 
-// --- PAGE 3: BILLING CORES & INVOICE ---
+// --- PAGE 3: BILLING CORES ---
 function updateInvoicePreview() {
     let area = document.getElementById('invoice-print-area');
     if(!area) return;
@@ -371,7 +359,7 @@ function updateInvoicePreview() {
     
     let totalBill = cart.reduce((acc, cur) => acc + (cur.price * cur.qty), 0);
     let selectedMode = document.querySelector('input[name="bill-payment-mode"]:checked').value;
-    let upiID = "yourshopupi@okaxis"; // Real UPI payment placeholder integration
+    let upiID = "yourshopupi@okaxis"; 
     let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=${upiID}%26pn=Vbilling%26am=${totalBill}%26cu=INR`;
 
     let itemRows = ""; cart.forEach(item => { itemRows += `<tr><td style="padding:4px 0;">${item.title} (${item.size})</td><td style="text-align:center;">${item.qty}</td><td style="text-align:right;">${item.price}.00</td><td style="text-align:right;">${item.price * item.qty}.00</td></tr>`; });
@@ -382,8 +370,7 @@ function updateInvoicePreview() {
             <p style="font-size:10px; margin:2px 0; color:#555;">Chopra Kala Mau, Lucknow<br>School Uniform Specialist</p>
         </div>
         <table style="width:100%; font-size:10px; margin-bottom:5px;">
-            <tr><td><strong>Cust:</strong> ${name}</td><td style="text-align:right;"><strong>Date:</strong> ${dateStr}</td></tr>
-            <tr><td><strong>Mob:</strong> ${phone}</td><td style="text-align:right;"><strong>Inv:</strong> ${invNo}</td></tr>
+            <tr><td><strong>Cust:</strong> ${name}</td><td style="text-align:right;"><strong>Date:</strong> ${dateStr}</td></tr><tr><td><strong>Mob:</strong> ${phone}</td><td style="text-align:right;"><strong>Inv:</strong> ${invNo}</td></tr>
         </table>
         <table style="width:100%; font-size:11px; border-collapse:collapse; margin-bottom:5px;">
             <thead>
@@ -408,26 +395,25 @@ function updateInvoicePreview() {
     area.dataset.total = totalBill; area.dataset.name = name; area.dataset.phone = phone;
 }
 
-// --- WHATSAPP DIGITAL INVOICE PHOTO SHARE CORE ---
 function shareInvoiceAsImage() {
     let billElement = document.getElementById('invoice-print-area');
     let phone = document.getElementById('cust-phone').value.trim();
-    if(!billElement || cart.length == 0 || !phone) { alert("Cart or Customer Mobile Info missing!"); return; }
+    if(!billElement || cart.length == 0 || !phone) { alert("Info missing!"); return; }
     
     html2canvas(billElement, { scale: 3 }).then(canvas => {
         canvas.toBlob(blob => {
             let item = new ClipboardItem({ "image/png": blob });
             navigator.clipboard.write([item]).then(() => {
-                alert("Digital bill PNG Image copied! Open WhatsApp chat and press Ctrl+V to paste.");
+                alert("Bill Photo copied! Paste on WhatsApp chat.");
                 window.open(`https://api.whatsapp.com/send?phone=91${phone}`);
-            }).catch(err => alert("Copying failed! Browser permissions might block this system. Use text share button."));
+            }).catch(err => alert("Clipboard triggers blocked."));
         });
     });
 }
 
 function enableInvoiceEdit() { switchPage('cart'); }
 function cancelCurrentBill() {
-    if(confirm("Are you sure you want to delete this full bill?")) {
+    if(confirm("Discard current bill layout entirely?")) {
         cart = []; document.getElementById('cart-total-qty').innerText = "0"; document.getElementById('cust-name').value = ""; document.getElementById('cust-phone').value = ""; switchPage('home');
     }
 }
@@ -437,7 +423,6 @@ function printThermalBill() {
     let selectedMode = document.querySelector('input[name="bill-payment-mode"]:checked').value;
     if(!total || total == 0) return;
     
-    // Auto Inventory Stock Deduct Action Logic
     cart.forEach(c => {
         if(!c.isCustom) {
             let invItem = inventory.find(i => i.id === c.id);
@@ -448,22 +433,20 @@ function printThermalBill() {
 
     let log = { id: "LOG-"+Date.now(), name, total, mode: selectedMode, timestamp: Date.now(), dateStr: new Date().toLocaleDateString('en-IN') };
     historyLogs.unshift(log); localStorage.setItem('vb_history', JSON.stringify(historyLogs));
-    setupNameSuggestions(); resetHistoryFilter(); // Reset suggestion list
+    showNameSuggestions(); resetHistoryFilter(); 
     window.print();
     cart = []; document.getElementById('cart-total-qty').innerText = "0"; document.getElementById('cust-name').value = ""; document.getElementById('cust-phone').value = "";
 }
 
-// --- SMART GOOGLE STYLE NAME SUGGESTIONS Popup logic side ---
+// --- NAME AUTOCOMPLETE DROP-DOWN SYSTEM ---
 function showNameSuggestions() {
     let input = document.getElementById('cust-name');
     let q = input.value.trim().toLowerCase();
     let box = document.getElementById('suggestion-box');
     if(!q) { box.classList.add('hidden'); return; }
     
-    // History logs ke dynamic unique names collect karna side
     let uniqueLogsNames = [...new Set(historyLogs.map(log => log.name))];
     let completeDictionary = [...new Set([...basicNamesList, ...uniqueLogsNames])];
-    
     let filtered = completeDictionary.filter(name => name?.toLowerCase().startsWith(q)).slice(0, 5);
     
     if(filtered.length > 0) {
@@ -483,9 +466,9 @@ function showNameSuggestions() {
         box.classList.add('hidden');
     }
 }
-document.addEventListener('click', () => document.getElementById('suggestion-box').classList.add('hidden'));
+document.addEventListener('click', () => document.getElementById('suggestion-box')?.classList.add('hidden'));
 
-// --- STOCK PAGE 3 BLOCKS DASHBOARD VIEWS SIDE ---
+// --- STOCK PAGE 3 BLOCKS ---
 function previewImage(event) {
     let reader = new FileReader(); reader.onload = function() { uploadedImageBase64 = reader.result; document.getElementById('image-preview-container').innerHTML = `<img src="${uploadedImageBase64}">`; }; reader.readAsDataURL(event.target.files[0]);
 }
@@ -500,10 +483,10 @@ function saveNewStock() {
 
     inventory.push({ id: "ITEM-"+Date.now(), title, category, size, price: Number(price), stock: Number(qty), description: desc, image: uploadedImageBase64 || "" });
     localStorage.setItem('vb_inventory', JSON.stringify(inventory));
-    alert("Naya maal successfully added to stock list registry!");
+    alert("Maal chadh gaya successfully!");
     
     document.getElementById('stock-title').value = ""; document.getElementById('image-preview-container').innerHTML = ""; uploadedImageBase64 = "";
-    populateStockPanelDetails(); // Refresh list structure
+    populateStockPanelDetails(); 
 }
 function populateStockPanelDetails() {
     let allBody = document.getElementById('block-all-stocks-body');
@@ -515,7 +498,6 @@ function populateStockPanelDetails() {
         let stockColor = item.stock <= 3 ? 'red':'var(--success-green)';
         allBody.innerHTML += `<tr><td><strong>${item.title}</strong><br><span style="font-size:10px; color:#666;">${item.category}</span></td><td>${item.size}</td><td>₹${item.price}</td><td style="color:${stockColor}; font-weight:bold;">${item.stock} pieces</td></tr>`;
         
-        // Unavailable out-of-stock logic bracket
         if(item.stock === 0) {
             outBody.innerHTML += `<tr><td><strong>${item.title}</strong><br><span style="font-size:10px; color:#666;">${item.category}</span></td><td>${item.size}</td><td style="color:red; font-weight:bold;">Out Stock</td><td><button class="btn-update-stock-inline" onclick="promptRefillStock('${item.id}')">Refill</button></td></tr>`;
         }
@@ -529,11 +511,10 @@ function switchStockView(targetView) {
     document.getElementById(`stock-view-${targetView}`).classList.remove('hidden');
 }
 
-// Categories dropdown populate side on addstock page logic
 function populateCategoryDropdowns() {
     let dropdown = document.getElementById('stock-category'); if(!dropdown) return; dropdown.innerHTML = "";
     categoriesData.forEach(cat => { dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`; });
-    populateStockSizeSelector(); // Initialize sizes too bracket side
+    populateStockSizeSelector(); 
 }
 function populateStockSizeSelector() {
     let cat = document.getElementById('stock-category').value;
@@ -541,7 +522,9 @@ function populateStockSizeSelector() {
     let match = categoriesData.find(c => c.name === cat);
     if(match) { match.sizes.forEach(s => { sizeDrop.innerHTML += `<option value="${s}">${s}</option>`; }); }
 }
-document.getElementById('stock-category')?.addEventListener('change', populateStockSizeSelector);// --- HISTORY SECTION SIDE ---
+document.getElementById('stock-category')?.addEventListener('change', populateStockSizeSelector);
+
+// --- HISTORY SECTION ---
 function renderHistory(data = historyLogs) {
     let tbody = document.getElementById('history-table-body'); if(!tbody) return; tbody.innerHTML = "";
     data.forEach(log => {
@@ -567,7 +550,7 @@ function cleanOldHistory() {
     historyLogs = historyLogs.filter(log => log.timestamp > sixMoAgo); localStorage.setItem('vb_history', JSON.stringify(historyLogs));
 }
 
-// --- LEDGER CALCULATOR SECTION SIDE ---
+// --- CALCULATOR SECTION ---
 let ledgerItems = [];
 function addLedgerRow() {
     let item = document.getElementById('calc-item-name').value.trim() || "Regular Item";
@@ -606,21 +589,19 @@ function renderLedgerTable() {
 function removeLedgerRow(index) { ledgerItems.splice(index, 1); renderLedgerTable(); }
 function printCalculatorBill() {
     let grand = Number(document.getElementById('calculator-bill-area').dataset.total);
-    if(ledgerItems.length === 0 || grand == 0) { alert("Ledger calculator list is empty!"); return; }
+    if(ledgerItems.length === 0 || grand == 0) { alert("List is empty!"); return; }
     let selectedMode = document.querySelector('input[name="calc-payment-mode"]:checked').value;
     
     let log = { id: "LOG-"+Date.now(), name: "Quick Calc Customer", total: grand, mode: selectedMode, timestamp: Date.now(), dateStr: new Date().toLocaleDateString('en-IN') };
     historyLogs.unshift(log); localStorage.setItem('vb_history', JSON.stringify(historyLogs));
-    resetHistoryFilter(); // Reset suggester side
-    window.print();
+    showNameSuggestions(); window.print();
     ledgerItems = []; renderLedgerTable();
 }
 
-// Calculator WhatsApp Share photo PNG logic side
 function shareCalculatorAsImage() {
     let billEl = document.getElementById('calculator-bill-area');
     let grand = Number(billEl.dataset.total);
-    if(!billEl || ledgerItems.length == 0 || grand == 0) { alert("Ledger list data missing!"); return; }
+    if(!billEl || ledgerItems.length == 0 || grand == 0) { alert("List missing!"); return; }
     let phone = prompt("Enter customer WhatsApp number (10 digit):");
     if(!phone || isNaN(phone) || phone.trim().length !== 10) { alert("Enter valid 10-digit number!"); return; }
 
@@ -630,7 +611,7 @@ function shareCalculatorAsImage() {
             navigator.clipboard.write([item]).then(() => {
                 alert("Ledger bill PNG Image copied! Open WhatsApp chat and press Ctrl+V to paste.");
                 window.open(`https://api.whatsapp.com/send?phone=91${phone}`);
-            }).catch(err => alert("Photo copying failed! System might block dynamic clipboard triggers."));
+            }).catch(err => alert("Triggers blocked."));
         });
     });
 }
