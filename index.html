@@ -6,6 +6,7 @@
     <title>V billing</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -106,10 +107,11 @@
             <section id="page-billing" class="app-page hidden">
                 <h2><i class="fa fa-file-invoice"></i> Billing & Invoice</h2>
                 
-                <div class="customer-info-inputs">
-                    <input type="text" id="cust-name" placeholder="Customer Name" list="customer-suggestions" autocomplete="off">
-                    <datalist id="customer-suggestions"></datalist>
-                    
+                <div class="customer-info-inputs" style="position: relative;">
+                    <div class="autocomplete-wrapper" style="width: 100%; position: relative;">
+                        <input type="text" id="cust-name" placeholder="Customer Name" oninput="showNameSuggestions()" autocomplete="off">
+                        <div id="suggestion-box" class="suggestion-popup hidden"></div>
+                    </div>
                     <input type="tel" id="cust-phone" placeholder="Customer Mobile Number">
                 </div>
 
@@ -121,69 +123,92 @@
                     <label for="pay-online">Online Payment</label>
                 </div>
 
-                <div class="invoice-preview-box" id="invoice-print-area"></div>
+                <div class="invoice-container-white" style="background:#ffffff; padding:5px;">
+                    <div class="invoice-preview-box" id="invoice-print-area"></div>
+                </div>
 
                 <div class="billing-actions">
                     <button class="btn-edit" onclick="enableInvoiceEdit()"><i class="fa fa-edit"></i> Edit Bill</button>
                     <button class="btn-cancel" onclick="cancelCurrentBill()"><i class="fa fa-trash"></i> Cancel Bill</button>
                     <button class="btn-print" onclick="printThermalBill()"><i class="fa fa-print"></i> Print Bill</button>
-                    <button class="btn-whatsapp" onclick="shareOnWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Share WhatsApp</button>
+                    <button class="btn-whatsapp" onclick="shareInvoiceAsImage()"><i class="fa-brands fa-whatsapp"></i> Share WhatsApp (Image)</button>
                 </div>
             </section>
 
             <section id="page-add-item" class="app-page hidden">
                 <h2><i class="fa fa-box-open"></i> Stock Management Panel</h2>
                 
-                <div class="stock-block-box">
-                    <h3><i class="fa fa-plus-circle"></i> Block 1: Add New Stock Form</h3>
-                    <div class="form-container">
-                        <input type="text" id="stock-title" placeholder="Product Title (e.g. White Shirt)">
-                        <select id="stock-category"></select>
-                        <select id="stock-size-dropdown"></select>
-                        <input type="number" id="stock-price" placeholder="Price (₹)">
-                        <input type="number" id="stock-qty" placeholder="Stock Quantity (Pieces)">
-                        <textarea id="stock-desc" placeholder="Product Description (Optional)"></textarea>
-                        
-                        <label class="file-upload-label">
-                            <i class="fa fa-image"></i> Choose Photo from Gallery
-                            <input type="file" id="stock-image" accept="image/*" onchange="previewImage(event)">
-                        </label>
-                        <div id="image-preview-container"></div>
-                        <button class="btn-submit" onclick="saveNewStock()">Save Product to Inventory</button>
+                <div class="stock-dashboard-grid">
+                    <div class="stock-dash-card btn-available-stock" onclick="switchStockView('available')">
+                        <i class="fa fa-boxes-stacked"></i>
+                        <span>Available Stock</span>
+                    </div>
+                    <div class="stock-dash-card btn-unavailable-stock" onclick="switchStockView('unavailable')">
+                        <i class="fa fa-triangle-exclamation"></i>
+                        <span>Unavailable Stock</span>
+                    </div>
+                    <div class="stock-dash-card btn-add-stock" onclick="switchStockView('add-form')">
+                        <i class="fa fa-plus-circle"></i>
+                        <span>Add Stock</span>
                     </div>
                 </div>
 
-                <div class="stock-block-box" style="margin-top:20px;">
-                    <h3><i class="fa fa-list-check"></i> Block 2: All Added Shop Stocks</h3>
-                    <div class="table-responsive">
-                        <table class="stock-display-table">
-                            <thead>
-                                <tr>
-                                    <th>Product Details</th>
-                                    <th>Size</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody id="block-all-stocks-body"></tbody>
-                        </table>
+                <div id="stock-view-available" class="stock-sub-view hidden" style="margin-top:20px;">
+                    <div class="stock-block-box">
+                        <h3><i class="fa fa-list-check"></i> Available Shop Stocks</h3>
+                        <div class="table-responsive">
+                            <table class="stock-display-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product Details</th>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="block-all-stocks-body"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stock-block-box" style="margin-top:20px; border-color: var(--danger-red);">
-                    <h3 style="color: var(--danger-red);"><i class="fa fa-triangle-exclamation"></i> Block 3: Unavailable / Out of Stock</h3>
-                    <div class="table-responsive">
-                        <table class="stock-display-table">
-                            <thead>
-                                <tr style="background:#ffebee;">
-                                    <th style="color: var(--danger-red);">Product Details</th>
-                                    <th style="color: var(--danger-red);">Size</th>
-                                    <th style="color: var(--danger-red);">Status</th>
-                                    <th style="color: var(--danger-red);">Quick Update</th>
-                                </tr>
-                            </thead>
-                            <tbody id="block-out-stocks-body"></tbody>
-                        </table>
+                <div id="stock-view-unavailable" class="stock-sub-view hidden" style="margin-top:20px;">
+                    <div class="stock-block-box" style="border-color: var(--danger-red);">
+                        <h3 style="color: var(--danger-red);"><i class="fa fa-circle-xmark"></i> Unavailable / Out of Stock</h3>
+                        <div class="table-responsive">
+                            <table class="stock-display-table">
+                                <thead>
+                                    <tr style="background:#ffebee;">
+                                        <th style="color: var(--danger-red);">Product Details</th>
+                                        <th style="color: var(--danger-red);">Size</th>
+                                        <th style="color: var(--danger-red);">Status</th>
+                                        <th style="color: var(--danger-red);">Quick Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="block-out-stocks-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stock-view-add-form" class="stock-sub-view hidden" style="margin-top:20px;">
+                    <div class="stock-block-box">
+                        <h3><i class="fa fa-file-signature"></i> Fill New Product Data</h3>
+                        <div class="form-container">
+                            <input type="text" id="stock-title" placeholder="Product Title (e.g. White Shirt)">
+                            <select id="stock-category"></select>
+                            <select id="stock-size-dropdown"></select>
+                            <input type="number" id="stock-price" placeholder="Price (₹)">
+                            <input type="number" id="stock-qty" placeholder="Stock Quantity (Pieces)">
+                            <textarea id="stock-desc" placeholder="Product Description (Optional)"></textarea>
+                            
+                            <label class="file-upload-label">
+                                <i class="fa fa-image"></i> Choose Photo from Gallery
+                                <input type="file" id="stock-image" accept="image/*" onchange="previewImage(event)">
+                            </label>
+                            <div id="image-preview-container"></div>
+                            <button class="btn-submit" onclick="saveNewStock()">Save Product to Inventory</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -232,8 +257,14 @@
                         <button onclick="addLedgerRow()"><i class="fa fa-plus"></i></button>
                     </div>
                     
-                    <div class="ledger-sheet" id="calculator-bill-area"></div>
-                    <button class="btn-calc-print" onclick="printCalculatorBill()"><i class="fa fa-print"></i> Print Quick Bill</button>
+                    <div class="invoice-container-white" style="background:#ffffff; padding:5px;">
+                        <div class="ledger-sheet" id="calculator-bill-area"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button class="btn-calc-print" onclick="printCalculatorBill()"><i class="fa fa-print"></i> Print Quick Bill</button>
+                        <button class="btn-calc-whatsapp" onclick="shareCalculatorAsImage()" style="flex:1; padding:12px; background:#25d366; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fa-brands fa-whatsapp"></i> Share WhatsApp</button>
+                    </div>
                 </div>
             </section>
 
