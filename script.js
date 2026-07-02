@@ -72,18 +72,28 @@ function renderCategories() {
     let container = document.getElementById('categories-container');
     if(!container) return; container.innerHTML = "";
     
-    categoriesData.forEach(cat => {
-        let iconHtml = cat.icon.startsWith("data:image") 
-            ? `<img src="${cat.icon}" style="width:40px; height:40px; object-fit:contain; margin-bottom:8px;">` 
-            : `<i class="fa ${cat.icon}" style="font-size:26px; display:block; margin-bottom:8px; color:var(--primary-blue);"></i>`;
+    categoriesData.forEach((cat, index) => {
+        // Agar image uploaded hai toh woh dikhegi, nahi toh default box icon dikhega
+        let iconHtml = (cat.icon && cat.icon.startsWith("data:image")) 
+            ? `<img src="${cat.icon}" style="width:45px; height:45px; object-fit:contain; margin-bottom:8px; border-radius:4px;">` 
+            : `<i class="fa fa-box" style="font-size:26px; display:block; margin-bottom:8px; color:var(--primary-blue);"></i>`;
             
         container.innerHTML += `
-            <div class="category-card" onclick="openCategory('${cat.name}')">
+            <div class="category-card" style="position:relative;" onclick="openCategory('${cat.name}')">
+                <div class="cat-three-dots" onclick="toggleCategoryDropdown(${index}, event)" style="position:absolute; top:5px; right:8px; cursor:pointer; pading:2px; color:#555; z-index:10;">
+                    <i class="fa fa-ellipsis-v"></i>
+                </div>
+                <div id="cat-drop-${index}" class="three-dots-dropdown hidden" style="position:absolute; top:25px; right:5px; background:white; border:1px solid #ccc; border-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.2); z-index:20; text-align:left; width:120px;">
+                    <button onclick="triggerCategoryEdit(${index}, event)" style="display:block; width:100%; text-align:left; padding:6px 8px; background:none; border:none; font-size:11px; cursor:pointer;"><i class="fa fa-pencil"></i> Edit Details</button>
+                    <button onclick="deleteCategoryPhoto(${index}, event)" style="display:block; width:100%; text-align:left; padding:6px 8px; background:none; border:none; font-size:11px; cursor:pointer;"><i class="fa fa-image"></i> Delete Photo</button>
+                    <button onclick="deleteCategoryComplete(${index}, event)" style="display:block; width:100%; text-align:left; padding:6px 8px; background:none; border:none; font-size:11px; color:red; cursor:pointer;"><i class="fa fa-trash"></i> Delete All</button>
+                </div>
                 ${iconHtml}
                 <span>${cat.name}</span>
             </div>
         `;
     });
+    
     container.innerHTML += `
         <div class="category-card add-btn" onclick="openCategoryModal()">
             <i class="fa fa-plus-circle" style="font-size:24px; display:block; margin-bottom:8px; color:var(--primary-blue);"></i>
@@ -614,4 +624,78 @@ function shareCalculatorAsImage() {
             }).catch(err => alert("Triggers blocked."));
         });
     });
+}
+
+// --- DYNAMIC CATEGORY MANIPULATION ENGINE ---
+
+let tempEditCatIndex = null;
+let tempEditCatBase64 = "";
+
+function toggleCategoryDropdown(index, event) {
+    event.stopPropagation(); // Card click open hone se rokne ke liye
+    let drop = document.getElementById(`cat-drop-${index}`);
+    let currentState = drop.classList.contains('hidden');
+    document.querySelectorAll('.three-dots-dropdown').forEach(d => d.classList.add('hidden'));
+    if(currentState) drop.classList.remove('hidden');
+}
+
+function deleteCategoryPhoto(index, event) {
+    event.stopPropagation();
+    if(confirm("Kya aap is category ki photo hatana chahte hain?")) {
+        categoriesData[index].icon = "fa-box";
+        localStorage.setItem('vb_categories', JSON.stringify(categoriesData));
+        renderCategories();
+        populateCategoryDropdowns();
+    }
+}
+
+function deleteCategoryComplete(index, event) {
+    event.stopPropagation();
+    if(confirm(`WARNING: Kya aap poori "${categoriesData[index].name}" category aur uska layout delete karna chahte hain?`)) {
+        categoriesData.splice(index, 1);
+        localStorage.setItem('vb_categories', JSON.stringify(categoriesData));
+        renderCategories();
+        populateCategoryDropdowns();
+    }
+}
+
+// Category Edit Modal Trigger Windows
+function triggerCategoryEdit(index, event) {
+    event.stopPropagation();
+    tempEditCatIndex = index;
+    let cat = categoriesData[index];
+    tempEditCatBase64 = cat.icon.startsWith("data:image") ? cat.icon : "";
+    
+    // Ek temporary prompt box block modal details change karne ke liye
+    let newName = prompt("Category ka naya naam daalein:", cat.name);
+    if(newName === null) return; // cancel click kiya
+    newName = newName.trim();
+    if(!newName) { alert("Naam khali nahi ho sakta!"); return; }
+    
+    let askPhoto = confirm("Kya aap is category ke liye koi photo (Image) upload karna chahte hain?");
+    if(askPhoto) {
+        // Ek file input element dynamically create karenge taaki device gallery khule
+        let fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.onchange = function(e) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                categoriesData[index].name = newName;
+                categoriesData[index].icon = reader.result; // Base64 image data save ho gaya
+                localStorage.setItem('vb_categories', JSON.stringify(categoriesData));
+                alert("Category details badal gayi hain!");
+                renderCategories();
+                populateCategoryDropdowns();
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+        fileInput.click();
+    } else {
+        categoriesData[index].name = newName;
+        localStorage.setItem('vb_categories', JSON.stringify(categoriesData));
+        alert("Category ka naam badal gaya!");
+        renderCategories();
+        populateCategoryDropdowns();
+    }
 }
